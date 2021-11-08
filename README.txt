@@ -1,1 +1,1 @@
-A simple smart contract for an ERC20 Token ICO.
+A simple smart contract for an ERC20 Token.

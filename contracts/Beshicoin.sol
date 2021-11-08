@@ -1,53 +1,90 @@
-// Beshicoin ICO
-
-//Version of Compiler
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.4.22 <0.9.0;
 
 contract Beshicoin {
-        
-    // Maximum Supply
-    uint public max_beshicoin = 1000000;
-    
-    //USD to Beshicoin Conversion Rate
-    uint public usd_to_beshicoin = 1000;
-    
-    //Total number of beshicoins bought by investors
-    uint public total_beshicoin_bought = 0;
-    
-    //Mapping from the investor address to its equity in Beshicoins and USD
-    mapping(address => uint) equity_beshicoin;
-    mapping(address => uint) equity_usd;
-    
-    //Checking if investor can buy beshicoin 
-    modifier can_buy_beshicoin(uint usd_invested) {
-        require (usd_invested * usd_to_beshicoin + total_beshicoin_bought <= max_beshicoin);
+    //initialise maximum supply
+    uint public max_supply = 1000000;
+
+    //initialise circulation supply;
+    uint public circulation_supply = 0;
+
+    //initialise minter address
+    address public minter;
+
+    //initialise minted status
+    bool public minted_status = false;
+
+    //initialise mapping for balance
+    mapping(address => uint) balance;
+
+    //set restrictor for sensitive operations
+    modifier restricted() {
+        require(msg.sender == minter);
         _;
     }
     
-    //Getting equity in beshicoin of investor
-    function equity_in_beshicoin(address investor) external returns(uint) {
-        equity_beshicoin[investor];
-    } 
-    
-    //Getting equity in usd of investor
-    function equity_in_usd(address investor) external returns(uint) {
-        equity_usd[investor];
+    constructor() {
+        //set minter
+        minter = msg.sender;
+
+        //mint coins
+        mint();
     }
-    
-    //Buy Beshicoin 
-    function buy_beshicoin(address investor, uint usd_invested) external
-    can_buy_beshicoin(usd_invested) {
-        uint beshicoins_bought = usd_invested * usd_to_beshicoin;
-        equity_beshicoin[investor] += beshicoins_bought;
-        equity_usd[investor] = equity_beshicoin[investor]/usd_to_beshicoin;
-        total_beshicoin_bought += beshicoins_bought;
+
+    function mint() public restricted {
+        //set minter reward
+        uint minter_reward = 200000;
+
+        //set minter holdings
+        balance[minter] += minter_reward;
+
+        //set minted_status
+        minted_status = true;
+
+        //update circulation supply
+        circulation_supply += minter_reward;
     }
-    
-    //Selling Beshicoin 
-    function sell_beshicon(address investor, uint beshicoin_sold) external {
-        equity_beshicoin[investor] -= beshicoin_sold;
-        equity_usd[investor] = equity_beshicoin[investor]/usd_to_beshicoin;
-        total_beshicoin_bought -= beshicoin_sold; 
+
+    //check balance in an account
+    function check_balance(address accountAddress) view public returns(uint) {
+        return(balance[accountAddress]);
     }
-    
-} 
+
+    struct TransactionReceipt {
+        address senderAddress;
+        address receiverAddress;
+        uint amount;
+        string transaction_status;
+    }
+
+    //Set event for sent
+    event Sent(address from, address to, uint amount);
+
+    //set error condition
+    error InsufficientBalance(uint requested, uint available);
+
+    function send_coins(address receiver, uint amount) public returns(TransactionReceipt memory) {
+        address sender = msg.sender;
+
+        if(amount > balance[sender]){
+            revert InsufficientBalance({
+                requested: amount,
+                available: balance[sender]
+            });
+        }
+
+        balance[sender] -= amount;
+        balance[receiver] += amount;
+        emit Sent(sender, receiver, amount);
+
+        TransactionReceipt memory receipt = TransactionReceipt({
+            senderAddress: sender,
+            receiverAddress: receiver,
+            amount: amount,
+            transaction_status: "Successful"
+        });
+
+        return(receipt);
+    }
+
+}
