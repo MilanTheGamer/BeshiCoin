@@ -1,9 +1,9 @@
 // Beshicoin ICO
 
 //Version of Compiler
-pragma solidity >=0.4.16 <0.9.0;
+pragma solidity >=0.4.22 <0.9.0;
 
-contract beshicoin_ico {
+contract Beshicoin {
         
     // Maximum Supply
     uint public max_beshicoin = 1000000;
