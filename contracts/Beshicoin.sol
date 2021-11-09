@@ -15,7 +15,7 @@ contract Beshicoin {
     bool public minted_status = false;
 
     //initialise mapping for balance
-    mapping(address => uint) public balance;
+    mapping(address => uint) public  balance;
 
     //set restrictor for sensitive operations
     modifier restricted() {
@@ -46,8 +46,8 @@ contract Beshicoin {
     }
 
     //check balance in an account
-    function check_balance(address accountAddress) view public returns(uint) {
-        return(balance[accountAddress]);
+    function check_balance(address _accountAddress) view public returns(uint) {
+        return(balance[_accountAddress]);
     }
 
     //Set event for sent
@@ -56,17 +56,17 @@ contract Beshicoin {
     //set error condition
     error InsufficientBalance(uint requested, uint available);
 
-    function send_coins(address receiver, uint amount) public {
-        if(amount > balance[msg.sender]){
+    function send_coins(address _receiver, uint _amount) public {
+        if(_amount > balance[msg.sender]){
             revert InsufficientBalance({
-                requested: amount,
+                requested: _amount,
                 available: balance[msg.sender]
             });
         }
 
-        balance[msg.sender] -= amount;
-        balance[receiver] += amount;
-        emit Sent(msg.sender, receiver, amount);
+        balance[msg.sender] -= _amount;
+        balance[_receiver] += _amount;
+        emit Sent(msg.sender, _receiver, _amount);
     }
 
 }
