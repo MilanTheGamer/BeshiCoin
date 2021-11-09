@@ -15,7 +15,7 @@ contract Beshicoin {
     bool public minted_status = false;
 
     //initialise mapping for balance
-    mapping(address => uint) balance;
+    mapping(address => uint) public balance;
 
     //set restrictor for sensitive operations
     modifier restricted() {
@@ -50,41 +50,23 @@ contract Beshicoin {
         return(balance[accountAddress]);
     }
 
-    struct TransactionReceipt {
-        address senderAddress;
-        address receiverAddress;
-        uint amount;
-        string transaction_status;
-    }
-
     //Set event for sent
     event Sent(address from, address to, uint amount);
 
     //set error condition
     error InsufficientBalance(uint requested, uint available);
 
-    function send_coins(address receiver, uint amount) public returns(TransactionReceipt memory) {
-        address sender = msg.sender;
-
-        if(amount > balance[sender]){
+    function send_coins(address receiver, uint amount) public {
+        if(amount > balance[msg.sender]){
             revert InsufficientBalance({
                 requested: amount,
-                available: balance[sender]
+                available: balance[msg.sender]
             });
         }
 
-        balance[sender] -= amount;
+        balance[msg.sender] -= amount;
         balance[receiver] += amount;
-        emit Sent(sender, receiver, amount);
-
-        TransactionReceipt memory receipt = TransactionReceipt({
-            senderAddress: sender,
-            receiverAddress: receiver,
-            amount: amount,
-            transaction_status: "Successful"
-        });
-
-        return(receipt);
+        emit Sent(msg.sender, receiver, amount);
     }
 
 }

@@ -11,15 +11,15 @@ const init = async () => {
         deployedNetwork.address
     );
 
-    let receipt = await contract.methods
-        .send_coins("0xd3a3460F5fb173A186B46cD4A7436C3Bea674C29", 3000)
+    let recept = await contract.methods
+        .send_coins("0x1fDC9d3dbD08f341b043B7F0811e77BD10C38244", 3000)
         .call();
 
-    let balance = await contract.methods
-        .check_balance("0xd3a3460F5fb173A186B46cD4A7436C3Bea674C29")
-        .call();
+    // let balance = await contract.methods
+    //     .check_balance("0x1fDC9d3dbD08f341b043B7F0811e77BD10C38244")
+    //     .call();
 
-    console.log(balance);
+    console.log(recept);
 };
 
 init();
