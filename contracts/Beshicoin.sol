@@ -69,4 +69,11 @@ contract Beshicoin {
         emit Sent(msg.sender, _receiver, _amount);
     }
 
+    //For Event Testing
+    event Test(address _to,string _message);
+
+    function test(address _account,string memory _message ) public {
+        emit Test(_account,_message);
+    }
+
 }
