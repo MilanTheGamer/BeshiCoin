@@ -1,0 +1,27 @@
+{
+  "name": "beshicoin",
+  "version": "1.0.0",
+  "description": "A simple smart contract for an ERC20 Token.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MilanTheGamer/BeshiCoin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MilanTheGamer/BeshiCoin/issues"
+  },
+  "homepage": "https://github.com/MilanTheGamer/BeshiCoin#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.3",
+    "@truffle/hdwallet-provider": "^1.7.0",
+    "web3": "^1.6.1"
+  }
+}
