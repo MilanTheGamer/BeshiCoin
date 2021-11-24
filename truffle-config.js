@@ -19,6 +19,8 @@
  */
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+const infuraKey = "2cb14c1a0ac44fb097640d95f440641e";
+require("dotenv").config({ path: "./config/config.env" });
 
 const fs = require("fs");
 const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -61,7 +63,7 @@ module.exports = {
             provider: () =>
                 new HDWalletProvider(
                     mnemonic,
-                    `https://mainnet.infura.io/v3/2cb14c1a0ac44fb097640d95f440641e`
+                    `https://ropsten.infura.io/v3/${infuraKey}`
                 ),
             network_id: 3, // Ropsten's id
             gas: 5500000, // Ropsten has a lower block limit than mainnet
@@ -117,4 +119,10 @@ module.exports = {
     //   }
     // }
     // }
+
+    plugins: ["truffle-plugin-verify"],
+
+    api_keys: {
+        etherscan: process.env.ETHERSCAN_API_KEY,
+    },
 };
