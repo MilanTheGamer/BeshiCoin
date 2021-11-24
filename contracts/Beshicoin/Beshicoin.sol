@@ -12,9 +12,9 @@ contract Beshicoin is ERC20 {
         _;
     }
 
-    constructor(string memory name,string memory symbol) ERC20(name,symbol) {
+    constructor(string memory name,string memory symbol,uint totalSupply) ERC20(name,symbol) {
         owner = msg.sender;
-        _mint(msg.sender, 100 * 10 ** uint(decimals()));
+        _mint(msg.sender, totalSupply * 10 ** uint(decimals()));
     }
 
     function burn(uint amount) public onlyOwner {
